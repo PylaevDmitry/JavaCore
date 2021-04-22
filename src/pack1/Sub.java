@@ -5,10 +5,11 @@ public class Sub extends Base {
     public static int newS;
     public String par99="99";
 
+
     static {
         newS = 55;
     }
-    public int par1=44;
+
 
     Sub(String a, int b) {
         super(a);
@@ -29,7 +30,7 @@ public class Sub extends Base {
 
     Integer b;
 
-    @Override
+
     public void draw (String b) {
         this.b=Integer.parseInt(b)+1;
         System.out.println(b);
@@ -44,6 +45,10 @@ public class Sub extends Base {
     public void meth3 (String[] args) {
         this.mettt();
         super.mettt();
+    }
+
+    public static void st() {
+        System.out.println("sub static");
     }
 
 }

@@ -9,6 +9,15 @@ public class Solution {
 
     }
 
+    static long aVeryBigSum(long[] ar) {
+        long res=0;
+        for (long element:ar ) {
+            res+=element;
+        }
+        return res;
+
+    }
+
 
 //    public static String sumFracts (int[][] l) {
 //        if (l.length==0) return null;

@@ -4,6 +4,7 @@ public class Base implements interface1 {
 
     public static int par1 =1;
     public int par99=0;
+    protected int par100=100;
     private String a;
 
     protected Base (String a) {
@@ -33,6 +34,9 @@ public class Base implements interface1 {
     public void meth1 (int t) {
         System.out.print(t);
         stat();
+    }
+    public static void st () {
+        System.out.println("base static");
     }
 
     public void mettt () {
