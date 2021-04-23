@@ -9,13 +9,14 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.time.temporal.ValueRange;
 import java.util.*;
+import java.util.stream.Collectors;
 
-enum Mods {MAIN_MENU, EXIT_PROGRAM, NEW_TASK, EDIT_TASK}
-enum EditCommands {DEL, DONE, WAIT, BACK, EXIT}
+enum ProgramStatus {MAIN_MENU, EXIT_PROGRAM, NEW_TASK, EDIT_TASK}
+enum UserEditCommands {DEL, DONE, WAIT, BACK, EXIT}
 
 public class ToDoList {
     public static void main (String path) {
-        Mods mode=Mods.MAIN_MENU;
+        ProgramStatus mode= ProgramStatus.MAIN_MENU;
         List<Task> taskList = new ArrayList<>();
 
         try {
@@ -26,64 +27,66 @@ public class ToDoList {
             }
         } catch (IOException | InvalidPathException e) {
             System.out.println("Нет доступа к диску, попробуйте задать другое место на диске или другой диск");
-            mode=Mods.EXIT_PROGRAM;
+            mode= ProgramStatus.EXIT_PROGRAM;
         }
 
-        while (!mode.equals(Mods.EXIT_PROGRAM)) {
-            for (int i = 0; i < taskList.size(); i++) {
-                taskList.get(i).setCorrectIndex(i+1);
-                System.out.println(taskList.get(i).toString());
-            }
+        while (!mode.equals(ProgramStatus.EXIT_PROGRAM)) {
+           Scanner scanner = new Scanner((System.in)).useDelimiter("\n");
+           String userInput = "";
+           int taskIndex = Integer.MIN_VALUE;
 
-            Scanner scanner = new Scanner((System.in)).useDelimiter("\n");
-            String userInput;
-            int taskIndex=Integer.MIN_VALUE;
+           if (!(taskList.size() == 0)) do {
+               System.out.println("Выберете номер пункта, создайте новую задачу (NEW) или EXIT - выйти из программы");
+               userInput = scanner.next();
+               try {
+                   taskIndex = Integer.parseInt(userInput);
+               } catch (NumberFormatException ignored) {
+               }
+           } while (!(userInput.equals("EXIT"))
+                   && !(userInput.equals("NEW"))
+                   && !(ValueRange.of(1, taskList.size() + 1).isValidIntValue(taskIndex)));
 
-            do {
-                System.out.println("Выберете номер пункта, создайте новую задачу (NEW) или EXIT - выйти из программы");
-                userInput = scanner.next();
-                try {
-                    taskIndex=Integer.parseInt(userInput);
-                } catch (NumberFormatException ignored) {
-                }
-            } while (!(taskList.size()==0)
-                    &&!(userInput.equals("EXIT"))
-                    &&!(userInput.equals("NEW"))
-                    &&!(ValueRange.of(1, taskList.size()+1).isValidIntValue(taskIndex)));
+           if (userInput.equals("EXIT")) mode = ProgramStatus.EXIT_PROGRAM;
+           else if (userInput.equals("NEW") || (taskList.size() == 0)) mode = ProgramStatus.NEW_TASK;
+           else mode = ProgramStatus.EDIT_TASK;
 
-            if (userInput.equals("EXIT")) mode = Mods.EXIT_PROGRAM;
-            else if (userInput.equals("NEW")||(taskList.size()==0)) mode = Mods.NEW_TASK;
-            else mode=Mods.EDIT_TASK;
+           if (mode.equals(ProgramStatus.EDIT_TASK)) {
+               do {
+                   System.out.println("DEL - удалить, DONE - пометить как выполненное, WAIT - возобновить задачу," +
+                           " BACK - к списку заметок или EXIT - выйти из программы ");
+                   userInput = scanner.next();
+               } while (!Arrays.stream(UserEditCommands.values()).map(String::valueOf).collect(Collectors.toList()).contains(userInput) || userInput.isBlank());
 
-            if (mode.equals(Mods.EDIT_TASK)) {
+               switch (userInput) {
+                   case "EXIT" -> mode = ProgramStatus.EXIT_PROGRAM;
+                   case "DEL" -> {
+                       taskList.remove(taskIndex - 1);
+                       for (int i = 0; i < taskList.size(); i++) {
+                           taskList.get(i).setCorrectIndex(i+1);
+                           System.out.println(taskList.get(i).toString());
+                       }
+                   }
+                   case "DONE" -> taskList.get(taskIndex - 1).setStatus("Done");
+                   case "WAIT" -> taskList.get(taskIndex - 1).setStatus("Wait");
+               }
+           }
 
-                do {
-                    System.out.println("DEL - удалить, DONE - пометить как выполненное, WAIT - возобновить задачу, BACK - назад или EXIT - выйти из программы ");
-                    userInput = scanner.next();
-                } while (!(Arrays.asList(EditCommands.values()).toString().contains(userInput))||userInput.isBlank());
+           if (mode.equals(ProgramStatus.NEW_TASK)) {
+               System.out.println("Введите новую заметку, BACK - к списку заметок или EXIT - выйти из программы");
+               userInput = scanner.next();
+               if (!(userInput.equals("BACK")) && !(userInput.equals("EXIT")))
+                   taskList.add(new Task(taskList.size() + 1, userInput, new Date(), "Wait"));
+               if (userInput.equals("EXIT")) mode = ProgramStatus.EXIT_PROGRAM;
+           }
 
-                if (EditCommands.valueOf(userInput)==EditCommands.EXIT) mode=Mods.EXIT_PROGRAM;
-                else if (EditCommands.valueOf(userInput)==EditCommands.DEL) taskList.remove(Integer.parseInt(userInput)-1);
-                else if (EditCommands.valueOf(userInput)==EditCommands.DONE) taskList.get(Integer.parseInt(userInput)-1).setStatus("Done");
-                else if (EditCommands.valueOf(userInput)==EditCommands.WAIT) taskList.get(Integer.parseInt(userInput)-1).setStatus("Wait");
-            }
-
-            if (mode.equals(Mods.NEW_TASK)) {
-                System.out.println("Введите новую заметку, BACK - назад или EXIT - выйти из программы");
-                userInput = scanner.next();
-
-                if (!userInput.equals("BACK")) taskList.add(new Task(taskList.size()+1, userInput, new Date(), "Wait"));
-                if (userInput.equals("EXIT")) mode=Mods.EXIT_PROGRAM;
-            }
-
-            try {
-                PrintStream printStream = new PrintStream(new FileOutputStream(path));
-                for (Task str : taskList) {
-                    printStream.println(str);
-                }
-            } catch (FileNotFoundException e) {
-                System.out.println("Файл не найден");
-            }
+           try {
+               PrintStream printStream = new PrintStream(new FileOutputStream(path));
+               for (Task str : taskList) {
+                   printStream.println(str);
+               }
+           } catch (FileNotFoundException e) {
+               System.out.println("Файл не найден");
+           }
         }
 
         System.out.println("Спасибо за использование моей программы");
