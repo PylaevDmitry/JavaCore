@@ -1,8 +1,9 @@
 package ToDoProject;
 
+import java.io.Serializable;
 import java.util.Date;
 
-class Task {
+class Task implements Serializable {
     private String index;
     private final String text;
     private final String date;
