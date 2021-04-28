@@ -1,9 +1,8 @@
 package ToDoProject;
 
-import java.io.Serializable;
 import java.util.Date;
 
-class Task implements Serializable {
+class Task {
     private String index;
     private final String text;
     private final String date;
@@ -18,12 +17,12 @@ class Task implements Serializable {
 
     public Task (String content) {
         this.index = content.substring(0, content.indexOf(" "));
-        this.text = content.substring(content.indexOf(" ")+1, content.length()-14);
+        this.text = content.substring(content.indexOf(" ")+1, content.length()-35);
         this.date = content.substring(content.length()-34, content.length()-5);
         this.status = content.substring(content.length()-4);
     }
 
-    public void setCorrectIndex (int index) {
+    public void setIndex (int index) {
         this.index = String.valueOf(index);
     }
 
