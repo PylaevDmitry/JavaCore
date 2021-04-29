@@ -1,6 +1,6 @@
 package ToDoProject;
 
-import ToDoProject.Models.Task;
+import ToDoProject.Models.Task_;
 import ToDoProject.UserInterfaces.ConsoleUserInterface;
 
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
 
-public class Main {
+public class Main_ {
     public static void main (String[] args) throws IOException {
         var storage = new Storage("D:\\ToDoList.txt");
         var ui = new ConsoleUserInterface();
@@ -35,7 +35,7 @@ public class Main {
 
     private void newTask () {
         var userInput = getUserInput("Введите новую заметку, BACK - к списку заметок или EXIT - выйти из программы");
-        if (!(userInput.equals("BACK"))) taskList.add(new Task(taskList.size() + 1, userInput, new Date(), "Wait"));
+        if (!(userInput.equals("BACK"))) taskList.add(new Task_(taskList.size() + 1, userInput, new Date(), "Wait"));
     }
 
     private void editTask (String userInput) {
@@ -66,7 +66,7 @@ public class Main {
         return userInput;
     }
 
-    private int getIndex (String userInput, Task[] tasks) {
+    private int getIndex (String userInput, Task_[] tasks) {
         try {
             int taskIndex = Integer.parseInt(userInput);
             if (ValueRange.of(1, tasks.length).isValidIntValue(taskIndex)) return taskIndex;

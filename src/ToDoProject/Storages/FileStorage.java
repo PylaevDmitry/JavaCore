@@ -1,7 +1,7 @@
 package ToDoProject.Storages;
 
 import ToDoProject.Abstractions.IStorage;
-import ToDoProject.Models.Task;
+import ToDoProject.Models.Task_;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,17 +21,17 @@ public class FileStorage implements IStorage {
     }
 
     @Override
-    public Task[] getAll () throws IOException {
-        var result = new ArrayList<Task>();
+    public Task_[] getAll () throws IOException {
+        var result = new ArrayList<Task_>();
         for (String task:Files.readAllLines(Paths.get(this.path))) {
             if (task.isEmpty()) continue;
-            result.add(new Task(task));
+            result.add(new Task_(task));
         }
-        return (Task[]) result.toArray();
+        return (Task_[]) result.toArray();
     }
 
     @Override
-    public void add (Task data) throws FileNotFoundException {
+    public void add (Task_ data) throws FileNotFoundException {
         var printStream = new PrintStream(new FileOutputStream(path));
         printStream.println(data);
         printStream.close();

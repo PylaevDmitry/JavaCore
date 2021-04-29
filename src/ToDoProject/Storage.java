@@ -1,6 +1,6 @@
 package ToDoProject;
 
-import ToDoProject.Models.Task;
+import ToDoProject.Models.Task_;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -13,14 +13,14 @@ import java.util.*;
 
 public class Storage {
     String path;
-    private final List<Task> taskList = new ArrayList<>();
+    private final List<Task_> taskList = new ArrayList<>();
 
     public Storage (String path) throws InvalidPathException, IOException {
         this.path=path;
         if (!Files.exists(Paths.get(path))) Files.createFile(Paths.get(path));
         else for (String task:Files.readAllLines(Paths.get(path))) {
             if (task.isEmpty()) continue;
-            taskList.add(new Task(task));
+            taskList.add(new Task_(task));
         }
     }
 
@@ -33,7 +33,7 @@ public class Storage {
 
     public void writeToFile () throws FileNotFoundException {
         var printStream = new PrintStream(new FileOutputStream(path));
-        for (Task str : taskList) {
+        for (Task_ str : taskList) {
             printStream.println(str);
         }
         printStream.close();

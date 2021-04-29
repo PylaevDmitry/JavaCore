@@ -2,19 +2,19 @@ package ToDoProject.Models;
 
 import java.util.Date;
 
-public class Task {
+public class Task_ {
     private int id;
     private final String text;
     private final String date;
     private String status;
 
-    public Task (String text, Date date, String status) {
+    public Task_ (String text, Date date, String status) {
         this.text = text;
         this.date = String.valueOf(date);
         this.status = status;
     }
 
-    public Task (String content) {
+    public Task_ (String content) {
         this.id = Integer.parseInt(content.substring(0, content.indexOf(" ")));
         this.text = content.substring(content.indexOf(" ")+1, content.length()-35);
         this.date = content.substring(content.length()-34, content.length()-5);
