@@ -7,15 +7,12 @@ import java.util.Scanner;
 public class Main {
     public static void main (String[] args) {
         try {
-            Scanner scanner = new Scanner((System.in)).useDelimiter("\n");
             IOStorage ioStorage = new IOStorage("D:\\ToDoList.txt");
             while (true) {
                 ioStorage.showActualList();
                 if (ioStorage.isEmpty()) ioStorage.newTask();
                 else {
-                    System.out.println("Выберете номер пункта, создайте новую задачу (NEW) или EXIT - выйти из программы");
-                    String userInput = scanner.next();
-                    if (userInput.equals("EXIT")) exit();
+                    String userInput=getUserInput("Выберете номер пункта, создайте новую задачу (NEW) или EXIT - выйти из программы");
                     if (userInput.equals("NEW")) ioStorage.newTask();
                     else ioStorage.editTask(userInput);
                 }
@@ -33,5 +30,13 @@ public class Main {
     static void exit() {
         System.out.println("Спасибо за использование программы");
         System.exit(0);
+    }
+
+    static String getUserInput (String message) {
+        Scanner scanner = new Scanner((System.in)).useDelimiter("\n");
+        System.out.println(message);
+        String userInput = scanner.next();
+        if (userInput.equals("EXIT")) exit();
+        return userInput;
     }
 }
