@@ -36,7 +36,6 @@ public class Storage {
         for (Task str : taskList) {
             printStream.println(str);
         }
-
         printStream.close();
     }
 }

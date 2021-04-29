@@ -25,7 +25,7 @@ public class Main {
     }
 
     public void userEdit() {
-        if (this.isEmpty()) this.newTask();
+        if (taskList.size()==0) this.newTask();
         else {
             String userInput = getUserInput("Выберете номер пункта, создайте новую задачу (NEW) или EXIT - выйти из программы");
             if (userInput.equals("NEW")) this.newTask();
@@ -53,7 +53,7 @@ public class Main {
         return Arrays.asList(list).contains(userInput);
     }
 
-    private void exit() {
+    public static void exit ( ) {
         System.out.println("Спасибо за использование программы");
         System.exit(0);
     }
@@ -66,15 +66,13 @@ public class Main {
         return userInput;
     }
 
-    private int getIndex (String userInput) {
+    private int getIndex (String userInput, Task[] tasks) {
         try {
             int taskIndex = Integer.parseInt(userInput);
-            if (ValueRange.of(1, taskList.size()).isValidIntValue(taskIndex)) return taskIndex;
+            if (ValueRange.of(1, tasks.length).isValidIntValue(taskIndex)) return taskIndex;
             else return -1;
         } catch (NumberFormatException e) {
             return -1;
         }
     }
-
-    private boolean isEmpty () { return taskList.size()==0; }
 }

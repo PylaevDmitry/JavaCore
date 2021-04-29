@@ -17,12 +17,11 @@ public class FileStorage implements IStorage {
     public FileStorage (String path) throws IOException {
         if (!Files.exists(Paths.get(path)))
             Files.createFile(Paths.get(path));
-
         this.path=path;
     }
 
     @Override
-    public Task[] GetAll() throws IOException {
+    public Task[] getAll () throws IOException {
         var result = new ArrayList<Task>();
         for (String task:Files.readAllLines(Paths.get(this.path))) {
             if (task.isEmpty()) continue;
@@ -32,21 +31,22 @@ public class FileStorage implements IStorage {
     }
 
     @Override
-    public void Add (Task data) throws FileNotFoundException {
+    public void add (Task data) throws FileNotFoundException {
         var printStream = new PrintStream(new FileOutputStream(path));
         printStream.println(data);
-
         printStream.close();
     }
 
     @Override
-    public void Delete (int id) throws IOException {
-        var tasks = GetAll();
+    public void delete (int id) throws IOException {
+        var tasks = getAll();
         for (var task : tasks) {
             if(task.getId() == id)
                 continue;
 
-            Add(task);
+            add(task);
         }
     }
+
+
 }

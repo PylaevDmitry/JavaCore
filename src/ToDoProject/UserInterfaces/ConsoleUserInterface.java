@@ -1,6 +1,8 @@
 package ToDoProject.UserInterfaces;
 
 import ToDoProject.Abstractions.IUserInterface;
+import ToDoProject.Main;
+import ToDoProject.Storage;
 
 import java.util.Scanner;
 
@@ -13,8 +15,11 @@ public class ConsoleUserInterface implements IUserInterface {
     }
 
     @Override
-    public String AskInput ( ) {
-        return _scanner.next();
+    public String AskInput (String message) {
+        System.out.println(message);
+        var userInput = _scanner.next();
+        if (userInput.equals("EXIT")) Main.exit();
+        return userInput;
     }
 
     @Override
