@@ -1,12 +1,12 @@
 package ToDoProject.Abstractions;
 
-import ToDoProject.Models.Task_;
+import ToDoProject.Models.Task;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public interface IStorage {
-    Task_[] getAll () throws IOException;
-    void add (Task_ data) throws FileNotFoundException;
+    Task[] getAll () throws IOException;
+    void add (Task data) throws IOException;
     void delete (int id) throws IOException;
+    void setStatus (int id, String status) throws IOException;
 }

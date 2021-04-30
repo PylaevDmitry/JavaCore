@@ -1,5 +1,7 @@
 package ToDoProject;
 
+import ToDoProject.Models.Task;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,13 +15,10 @@ import java.util.Date;
 import java.util.List;
 
 public class IOStorage {
-    String path;
     private final List<Task> taskList = new ArrayList<>();
 
     public IOStorage (String path) throws IOException, InvalidPathException {
-        this.path=path;
-        if (!Files.exists(Paths.get(path))) Files.createFile(Paths.get(path));
-        else for (String str:Files.readAllLines(Paths.get(path))) {
+       for (String str:Files.readAllLines(Paths.get(path))) {
             if (str.isEmpty()) continue;
             taskList.add(new Task(str));
         }
@@ -32,12 +31,11 @@ public class IOStorage {
         }
     }
 
-    void showActualList () {
-       for (int i = 0; i < taskList.size(); i++) {
-           taskList.get(i).setIndex(i+1);
-           System.out.println(taskList.get(i).toString());
-       }
-    }
+//    void actualizeList () {
+//       for (int i = 0; i < taskList.size(); i++) {
+//           taskList.get(i).setId(i+1);
+//       }
+//    }
 
     void editTask (String userInput) {
         int taskIndex = this.getIndex(userInput);

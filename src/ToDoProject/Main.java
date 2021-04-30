@@ -1,42 +1,46 @@
 package ToDoProject;
 
+import ToDoProject.Models.Task;
+import ToDoProject.Storages.FileStorage;
+import ToDoProject.UserInterfaces.ConsoleUserInterface;
+
 import java.io.IOException;
+import java.time.temporal.ValueRange;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
-    public static void main (String[] args) {
+    public static void main (String[] args) throws IOException {
+        var storage = new FileStorage("D:\\ToDoList.txt");
+        var taskList = new TaskList(storage.getAll());
+        var ui = new ConsoleUserInterface();
+
         try {
-            IOStorage ioStorage = new IOStorage("D:\\ToDoList.txt");
             while (true) {
-                ioStorage.showActualList();
-                if (ioStorage.isEmpty()) ioStorage.newTask();
-                else {
-                    String userInput=getUserInput("Выберете номер пункта, создайте новую задачу (NEW) или EXIT - выйти из программы");
-                    if (userInput.equals("NEW")) ioStorage.newTask();
-                    else ioStorage.editTask(userInput);
-                }
-                ioStorage.writeFile();
+                String userInput=getUserInput("Выберете номер пункта, создайте новую задачу (NEW) или EXIT - выйти из программы");
+                if (userInput.equals("NEW")) taskList.newTask();
+                else taskList.editTask(userInput);
             }
-        } catch (IOException e) {
-            System.out.println("Файл не найден");
-        }
+        } catch (IOException e) { System.out.println("Файл не найден"); }
     }
+
 
     static boolean commandInList (String userInput, String[] list) {
         return Arrays.asList(list).contains(userInput);
     }
 
-    static void exit() {
+    public static void exit ( ) {
         System.out.println("Спасибо за использование программы");
         System.exit(0);
     }
 
     static String getUserInput (String message) {
-        Scanner scanner = new Scanner((System.in)).useDelimiter("\n");
+        var scanner = new Scanner((System.in)).useDelimiter("\n");
         System.out.println(message);
         String userInput = scanner.next();
         if (userInput.equals("EXIT")) exit();
         return userInput;
     }
+
 }
