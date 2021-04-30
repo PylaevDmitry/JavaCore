@@ -1,7 +1,6 @@
 package ToDoProject.Abstractions;
 
 import ToDoProject.Models.Task;
-
 import java.io.IOException;
 
 public interface IStorage {

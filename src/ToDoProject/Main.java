@@ -39,10 +39,6 @@ public class Main {
         } catch (IOException e) { System.out.println("Файл не найден"); }
     }
 
-    public static void exit ( ) {
-        System.out.println("Спасибо за использование программы");
-        System.exit(0);
-    }
 
     static int getIndex (String userInput, Task[] tasks) {
         try {

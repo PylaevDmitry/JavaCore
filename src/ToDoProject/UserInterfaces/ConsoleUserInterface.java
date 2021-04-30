@@ -1,8 +1,6 @@
 package ToDoProject.UserInterfaces;
 
 import ToDoProject.Abstractions.IUserInterface;
-import ToDoProject.Main;
-
 import java.util.Scanner;
 
 public class ConsoleUserInterface implements IUserInterface {
@@ -17,7 +15,10 @@ public class ConsoleUserInterface implements IUserInterface {
     public String askInput (String message) {
         System.out.println(message);
         var userInput = _scanner.next();
-        if (userInput.equals("EXIT")) Main.exit();
+        if (userInput.equals("EXIT")) {
+            System.out.println("Спасибо за использование программы");
+            System.exit(0);
+        }
         return userInput;
     }
 
