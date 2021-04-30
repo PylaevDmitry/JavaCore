@@ -8,7 +8,7 @@ import java.time.temporal.ValueRange;
 import java.util.*;
 
 public class Main {
-    public static void main (String[] args) throws IOException {
+    public static void main (String[] args) {
         try {
             var storage = new FileStorage("D:\\ToDoList.txt");
             var ui = new ConsoleUserInterface();
@@ -32,15 +32,11 @@ public class Main {
                             if (userInput.equals("DONE")) storage.setStatus(taskIndex,"Done");
                             if (userInput.equals("WAIT")) storage.setStatus(taskIndex,"Wait");
                             if (userInput.equals("DEL")) storage.delete(taskIndex);
-                        } while (!Main.commandInList(userInput, new String[]{"DEL", "DONE", "WAIT", "BACK", "EXIT"}));
+                        } while (!Arrays.asList(new String[]{"DEL", "DONE", "WAIT", "BACK", "EXIT"}).contains(userInput));
                     }
                 }
             }
         } catch (IOException e) { System.out.println("Файл не найден"); }
-    }
-
-    static boolean commandInList (String userInput, String[] list) {
-        return Arrays.asList(list).contains(userInput);
     }
 
     public static void exit ( ) {

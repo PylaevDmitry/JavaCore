@@ -22,21 +22,18 @@ public class Task {
         this.status = content.substring(content.length()-4);
     }
 
-    public void setStatus (String status) {
-        this.status = status;
-    }
+    public void setStatus (String status) { this.status = status; }
 
     public int getId ( ) {
         return id;
-    }
-
-    @Override
-    public String toString () {
-        return  String.valueOf(id) + ' ' + text + ' ' + date + ' ' + status;
     }
 
     public void setId (int id) {
         this.id = id;
     }
 
+    @Override
+    public String toString () {
+        return  String.valueOf(id) + ' ' + text + ' ' + date + ' ' + status;
+    }
 }
