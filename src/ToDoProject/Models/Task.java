@@ -1,9 +1,5 @@
 package ToDoProject.Models;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Date;
 
 public class Task {
@@ -36,7 +32,7 @@ public class Task {
 
     @Override
     public String toString () {
-        return  id + ' ' + text + ' ' + date + ' ' + status;
+        return  String.valueOf(id) + ' ' + text + ' ' + date + ' ' + status;
     }
 
     public void setId (int id) {

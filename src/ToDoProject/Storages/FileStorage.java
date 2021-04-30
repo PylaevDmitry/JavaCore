@@ -26,7 +26,14 @@ public class FileStorage implements IStorage {
             if (task.isEmpty()) continue;
             result.add(new Task(task));
         }
-        return (result.size()!=0)?(Task[]) result.toArray():new Task[0];
+        if (result.size()==0) return new Task[0];
+        else {
+            Task[] resArr = new Task[result.size()];
+            for (int i = 0; i < result.size(); i++) {
+                resArr[i]= result.get(i);
+            }
+            return resArr;
+        }
     }
 
     @Override

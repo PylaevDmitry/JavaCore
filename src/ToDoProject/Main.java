@@ -13,11 +13,9 @@ public class Main {
             var storage = new FileStorage("D:\\ToDoList.txt");
             var ui = new ConsoleUserInterface();
             while (true) {
-                for (Task task:storage.getAll()) {
-                    ui.show(task.toString());
-                }
+                for (Task task:storage.getAll()) { ui.show(task.toString()); }
                 String userInput;
-                if (storage.getAll().length>0) {
+                if (storage.getAll().length==0) {
                     userInput = ui.askInput("Введите новую заметку, BACK - к списку заметок или EXIT - выйти из программы");
                     if (!userInput.equals("BACK")) storage.add(new Task(storage.getAll().length + 1, userInput, new Date(), "Wait"));
                 }
@@ -31,9 +29,9 @@ public class Main {
                         if (taskIndex != -1) do {
                             userInput = ui.askInput("DEL - удалить, DONE - пометить как выполненное, WAIT - возобновить задачу," +
                                     " BACK - к списку заметок или EXIT - выйти из программы ");
-                            if (userInput.equals("DONE")) storage.setStatus(taskIndex - 1,"Done");
-                            if (userInput.equals("WAIT")) storage.setStatus(taskIndex - 1,"Wait");
-                            if (userInput.equals("DEL")) storage.delete(taskIndex - 1);
+                            if (userInput.equals("DONE")) storage.setStatus(taskIndex,"Done");
+                            if (userInput.equals("WAIT")) storage.setStatus(taskIndex,"Wait");
+                            if (userInput.equals("DEL")) storage.delete(taskIndex);
                         } while (!Main.commandInList(userInput, new String[]{"DEL", "DONE", "WAIT", "BACK", "EXIT"}));
                     }
                 }
