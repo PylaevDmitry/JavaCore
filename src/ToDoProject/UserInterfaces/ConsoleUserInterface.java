@@ -14,7 +14,7 @@ public class ConsoleUserInterface implements IUserInterface {
     }
 
     @Override
-    public String AskInput (String message) {
+    public String askInput (String message) {
         System.out.println(message);
         var userInput = _scanner.next();
         if (userInput.equals("EXIT")) Main.exit();
@@ -22,7 +22,7 @@ public class ConsoleUserInterface implements IUserInterface {
     }
 
     @Override
-    public void Show (String message) {
+    public void show (String message) {
         System.out.println(message);
     }
 }
