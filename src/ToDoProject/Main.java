@@ -3,6 +3,8 @@ package ToDoProject;
 import ToDoProject.Models.Task;
 import ToDoProject.Storages.FileStorage;
 import ToDoProject.UserInterfaces.ConsoleUserInterface;
+import ToDoProject.UserInterfaces.WindowUserInterface;
+
 import java.io.IOException;
 import java.time.temporal.ValueRange;
 import java.util.*;
@@ -11,7 +13,7 @@ public class Main {
     public static void main (String[] args) {
         try {
             var storage = new FileStorage("D:\\ToDoList.txt");
-            var ui = new ConsoleUserInterface();
+            var ui = new WindowUserInterface();
             while (true) {
                 for (Task task:storage.getAll()) { ui.show(task.toString()); }
                 String userInput;
@@ -49,4 +51,5 @@ public class Main {
             return -1;
         }
     }
+
 }
