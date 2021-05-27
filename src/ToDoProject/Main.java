@@ -1,6 +1,7 @@
 package ToDoProject;
 
 import ToDoProject.Models.Task;
+import ToDoProject.Storages.DBStorage;
 import ToDoProject.Storages.FileStorage;
 import ToDoProject.UserInterfaces.ConsoleUserInterface;
 import ToDoProject.UserInterfaces.WindowUserInterface;
@@ -12,8 +13,8 @@ import java.util.*;
 public class Main {
     public static void main (String[] args) {
         try {
-            var storage = new FileStorage("D:\\ToDoList.txt");
-            var ui = new WindowUserInterface();
+            var storage = new DBStorage("localhost", "5432", "postgres", "12345", "todo", "org.postgresql.Driver");
+            var ui = new ConsoleUserInterface();
             while (true) {
                 for (Task task:storage.getAll()) { ui.show(task.toString()); }
                 String userInput;
@@ -41,15 +42,14 @@ public class Main {
         } catch (IOException e) { System.out.println("Файл не найден"); }
     }
 
-
     static int getIndex (String userInput, Task[] tasks) {
         try {
             int taskIndex = Integer.parseInt(userInput);
-            if (ValueRange.of(1, tasks.length).isValidIntValue(taskIndex)) return taskIndex;
-            else return -1;
-        } catch (NumberFormatException e) {
+            for (Task task:tasks) { if (task.getId()==taskIndex) return taskIndex; }
+//            if (ValueRange.of(1, tasks.length).isValidIntValue(taskIndex)) return taskIndex;
             return -1;
-        }
+        } catch (NumberFormatException e) { return -1; }
     }
 
+    static int generateContactId() { return (int) Math.round(Math.random() * 1000 + System.currentTimeMillis()); }
 }

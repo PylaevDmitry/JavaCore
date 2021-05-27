@@ -28,12 +28,22 @@ public class Task {
         return id;
     }
 
+    public String getText ( ) {
+        return text;
+    }
+
+    public String getDate ( ) {
+        return date;
+    }
+
+    public String getStatus ( ) {
+        return status;
+    }
+
     public void setId (int id) {
         this.id = id;
     }
 
     @Override
-    public String toString () {
-        return  String.valueOf(id) + ' ' + text + ' ' + date + ' ' + status;
-    }
+    public String toString () { return  String.valueOf(id) + ' ' + text + ' ' + date + ' ' + status; }
 }

@@ -15,8 +15,7 @@ public class FileStorage implements IStorage {
 
     public FileStorage (String path) throws IOException {
         this.path=path;
-        if (!Files.exists(Paths.get(path)))
-            Files.createFile(Paths.get(path));
+        if (!Files.exists(Paths.get(path))) Files.createFile(Paths.get(path));
     }
 
     @Override
@@ -29,9 +28,7 @@ public class FileStorage implements IStorage {
         if (result.size()==0) return new Task[0];
         else {
             Task[] resArr = new Task[result.size()];
-            for (int i = 0; i < result.size(); i++) {
-                resArr[i]= result.get(i);
-            }
+            for (int i = 0; i < result.size(); i++) { resArr[i]= result.get(i); }
             return resArr;
         }
     }
@@ -47,8 +44,7 @@ public class FileStorage implements IStorage {
         int actualId=0;
         PrintStream printStream = new PrintStream(new FileOutputStream(path));
         for (var task : tasks) {
-            if(task.getId() == id)
-                continue;
+            if(task.getId() == id) continue;
             actualId++;
             task.setId(actualId);
             printStream.println(task);
@@ -61,8 +57,7 @@ public class FileStorage implements IStorage {
         int actualId=0;
         PrintStream printStream = new PrintStream(new FileOutputStream(path));
         for (var task : tasks) {
-            if(task.getId() == id)
-                task.setStatus(status);
+            if(task.getId() == id) task.setStatus(status);
             actualId++;
             task.setId(actualId);
             printStream.println(task);
