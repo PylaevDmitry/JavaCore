@@ -8,7 +8,7 @@ public class WindowUserInterface implements IUserInterface {
     private boolean showListEnds = false;
     private ArrayList<String> bufList = new ArrayList<>();
     private JPanel field = new JPanel();
-    private MainWindow mw = new MainWindow();
+    private MainWindow mainWindow = new MainWindow();
     private String userInput;
     private boolean userInputEnds;
 
@@ -31,7 +31,7 @@ public class WindowUserInterface implements IUserInterface {
         textField.setHorizontalAlignment(JTextField.CENTER);
         field.add(textField);
         field.repaint();
-        mw.setVisible(true);
+        mainWindow.setVisible(true);
         textField.addActionListener(e -> {
             userInput = textField.getText();
             if (userInput.equals("EXIT")) System.exit(0);

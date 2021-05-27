@@ -35,31 +35,25 @@ public class FileStorage implements IStorage {
 
     @Override
     public void add (Task task) throws IOException {
-        Files.write(Paths.get(path), (task.toString()+"\n").getBytes(), StandardOpenOption.APPEND);
+        Files.write(Paths.get(path), (task.toString()+task.getId()+"\n").getBytes(), StandardOpenOption.APPEND);
     }
 
     @Override
-    public void delete (int id) throws IOException {
+    public void delete (long index) throws IOException {
         var tasks = getAll();
-        int actualId=0;
         PrintStream printStream = new PrintStream(new FileOutputStream(path));
         for (var task : tasks) {
-            if(task.getId() == id) continue;
-            actualId++;
-            task.setId(actualId);
+            if(task.getId() == index) continue;
             printStream.println(task);
         }
     }
 
     @Override
-    public void setStatus (int id, String status) throws IOException {
+    public void setStatus (long id, String status) throws IOException {
         var tasks = getAll();
-        int actualId=0;
         PrintStream printStream = new PrintStream(new FileOutputStream(path));
         for (var task : tasks) {
             if(task.getId() == id) task.setStatus(status);
-            actualId++;
-            task.setId(actualId);
             printStream.println(task);
         }
     }
