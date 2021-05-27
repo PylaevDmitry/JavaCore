@@ -2,8 +2,9 @@ package ToDoProject;
 
 import ToDoProject.Models.Task;
 import ToDoProject.Storages.DBStorage;
+import ToDoProject.Storages.FileStorage;
 import ToDoProject.UserInterfaces.ConsoleUserInterface;
-
+import ToDoProject.UserInterfaces.WindowUserInterface;
 import java.io.IOException;
 import java.time.temporal.ValueRange;
 import java.util.*;
@@ -13,6 +14,9 @@ public class Main {
         try {
             var storage = new DBStorage("localhost", "5432", "postgres", "12345", "todo", "org.postgresql.Driver");
             var ui = new ConsoleUserInterface();
+            var storageReserve = new FileStorage("D:\\ToDoList.txt");
+            var uiReserve = new WindowUserInterface();
+
             while (true) {
                 Task[] arrTask = storage.getAll();
                 Map<Integer, Task> map = new LinkedHashMap<>();
