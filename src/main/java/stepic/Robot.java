@@ -1,4 +1,4 @@
-package JavaBase;
+package stepic;
 
 import java.util.logging.*;
 

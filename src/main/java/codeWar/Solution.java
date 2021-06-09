@@ -33,6 +33,15 @@ public class Solution {
         return (common%commonDiv==0)? String.valueOf(common/commonDiv) : "[" + common+", " + commonDiv+ "]";
     }
 
+    static int max(int[] arr) {
+        try {
+            return (arr.length == 1) ? arr[0] : Integer.max(max(Arrays.copyOfRange(arr, 1, arr.length)), arr[0]);
+        } catch (NumberFormatException e) {
+            arr[0] = Integer.MAX_VALUE;
+            return (arr.length == 1) ? arr[0] : Integer.max(max(Arrays.copyOfRange(arr, 1, arr.length)), arr[0]);
+        }
+    }
+
     static int gcd(int a, int b) {
         return b == 0 ? a : gcd(b,a % b);
     }

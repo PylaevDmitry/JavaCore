@@ -1,6 +1,6 @@
-package JavaBase;
+package stepic;
 
-import JavaBase.Mail.Mail;
+import stepic.Mail.Mail;
 
 import java.io.*;
 import java.util.logging.ConsoleHandler;

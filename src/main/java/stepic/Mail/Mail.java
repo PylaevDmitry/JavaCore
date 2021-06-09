@@ -1,4 +1,4 @@
-package JavaBase.Mail;
+package stepic.Mail;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
