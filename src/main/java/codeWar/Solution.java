@@ -1,11 +1,9 @@
 package codeWar;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class Solution {
     public static void main(String[] args) {
-
         System.out.println(sumFracts(new int[][] { {2,1}, {2,9}, {3,18}, {4,24}, {6,48} }));
 
     }

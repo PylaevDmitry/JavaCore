@@ -1,7 +1,5 @@
 package stepic;
 
-import stepic.Mail.Mail;
-
 import java.io.*;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
