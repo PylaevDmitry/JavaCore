@@ -8,21 +8,14 @@ public class Main {
         for (int i = 0; i < 100; i++) {
             System.out.println(i+" :"+random.nextInt(22));
         }
-//        new Main().run();
-
+        new Main().run();
     }
 
     void run () {
         Scanner scanner = new Scanner(System.in).useDelimiter("\n");
-        int n = scanner.nextInt();
         int[] input = Arrays.stream(scanner.next().split(" ")).mapToInt(Integer::parseInt).toArray();
-        int result = 0;
-        for (int i = 0; i < n; i++) {
-            int[] temp = Arrays.copyOfRange(input, i+1, input.length);
-            Arrays.sort(temp);
-            result+=binarySearch(temp, input[i]);
-        }
-        System.out.println(result);
+        int[] sortedA = mergeSort(input);
+        Arrays.stream(sortedA).forEach(System.out::println);
     }
 
 //    void run () {
@@ -31,6 +24,35 @@ public class Main {
 //        int[] b = Arrays.stream(scanner.next().split(" ")).mapToInt(Integer::parseInt).toArray();
 //        for (int i = 1; i < b[0]+1; i++) { System.out.print(binarySearch(a, b[i]) + " "); }
 //    }
+
+    int[] merge (int[] a, int[] b) {
+        int i = 0;
+        int j = 0;
+        int[] res = new int[a.length+b.length];
+        for (int k = 0; k < res.length; k++) {
+            if (j==b.length || (i<a.length && a[i]<b[j])) {
+                res[k] = a[i];
+                i++;
+            } else {
+                res[k] = b[j];
+                j++;
+            }
+        }
+        return res;
+    }
+
+    int[] mergeSort(int[] a) {
+        int n = a.length;
+        int m = n/2;
+        if (n==1) return a;
+        int[] left = new int[m];
+        int[] right = new int[n-m];
+        System.arraycopy(a, 0, left, 0, m);
+        System.arraycopy(a, m, right, 0, n - m);
+        left = mergeSort(left);
+        right = mergeSort(right);
+        return merge(left, right);
+    }
 
     int binarySearch (int[] a, int x) {
         int l=-1;

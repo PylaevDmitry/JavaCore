@@ -18,7 +18,7 @@ fun main() {
     publisher1.state = State.REJECT
     publisher1.mainLogic()
 
-    Thread.sleep(5000)
+    Thread.sleep(3000)
 
     publisher1.state = State.DONE
     publisher1.mainLogic()
@@ -65,9 +65,7 @@ class Publisher:Publishers {
     }
 
     override fun notifySubscribers() {
-        for (sub in subscribers) {
-           sub.update(state)
-        }
+        subscribers.forEach { it.update(state) }
     }
 }
 
