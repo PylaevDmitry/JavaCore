@@ -3,9 +3,8 @@ package toDoProject.Storages;
 import toDoProject.Abstractions.IStorage;
 import toDoProject.Main;
 import toDoProject.Models.Task;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -49,10 +48,10 @@ public class FileStorage implements IStorage {
     @Override
     public void remove (long index) {
         var tasks = getAll();
-        try (PrintStream printStream = new PrintStream(new FileOutputStream(path))) {
+        try (PrintWriter printWriter = new PrintWriter(path)) {
             for (var task : tasks) {
                 if (task.getId() == index) continue;
-                printStream.println(task.getId() + " " + task);
+                printWriter.println(task.getId() + " " + task);
             }
         } catch (IOException e) { Main.storageErrorPrint(); }
     }
@@ -60,10 +59,10 @@ public class FileStorage implements IStorage {
     @Override
     public void setStatus (long id, String status) {
         var tasks = getAll();
-        try (PrintStream printStream = new PrintStream(new FileOutputStream(path))) {
+        try (PrintWriter printWriter = new PrintWriter(path)) {
             for (var task : tasks) {
                 if (task.getId() == id) task.setStatus(status);
-                printStream.println(task.getId() + " " + task);
+                printWriter.println(task.getId() + " " + task);
             }
         } catch (IOException e) { Main.storageErrorPrint(); }
     }
