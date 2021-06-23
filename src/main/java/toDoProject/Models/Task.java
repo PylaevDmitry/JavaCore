@@ -3,13 +3,13 @@ package toDoProject.Models;
 import java.util.Date;
 
 public class Task {
-    private final long id;
+    private long id;
     private final String text;
     private final String date;
     private String status;
 
     public Task (String text, Date date, String status) {
-        this.id = Math.round(Math.random() * 1000 + System.currentTimeMillis());
+        this.id = 0;
         this.text = text;
         this.date = String.valueOf(date);
         this.status = status;
@@ -21,6 +21,8 @@ public class Task {
         this.date = content.substring(content.length()-34, content.length()-5);
         this.status = content.substring(content.length()-4);
     }
+
+    public void setId (long id) { this.id = id; }
 
     public void setStatus (String status) { this.status = status; }
 

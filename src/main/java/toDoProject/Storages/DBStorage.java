@@ -9,15 +9,16 @@ import java.util.ArrayList;
 public class DBStorage implements IStorage {
     private final String dbUser;
     private final String dbPass;
-    private static final String TABLE_CURRENT = "tasks";
+    private final String listName;
     private static final String ID  = "id";
     private static final String TEXT  = "text";
     private static final String DATE  = "date";
     private static final String STATUS  = "status";
 
-    public DBStorage (String dbUser, String dbPass) {
+    public DBStorage (String dbUser, String dbPass, String listName) {
         this.dbUser = dbUser;
         this.dbPass = dbPass;
+        this.listName = listName;
     }
 
     private Connection getDbConnection() throws SQLException {
@@ -29,7 +30,19 @@ public class DBStorage implements IStorage {
 
     @Override
     public Task[] getAll ( ) {
-        String request = "SELECT * FROM " + TABLE_CURRENT + ";";
+        String firstRequest = "CREATE TABLE IF NOT EXISTS " + listName + " (\n" +
+                ID + " SERIAL,\n" +
+                TEXT + " VARCHAR(50),\n" +
+                DATE + " VARCHAR(50),\n" +
+                STATUS + " VARCHAR(50),\n" +
+                "PRIMARY KEY (" + ID + ")\n" +
+                ");";
+        try (Connection dbConnection = getDbConnection()) {
+            PreparedStatement preparedStatement = dbConnection.prepareStatement(firstRequest);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) { Main.storageErrorPrint(); }
+
+        String request = "SELECT * FROM " + listName + ";";
         var result = new ArrayList<Task>();
         try (Connection dbConnection = getDbConnection()) {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(request);
@@ -54,20 +67,23 @@ public class DBStorage implements IStorage {
 
     @Override
     public void add (Task data) {
-        String request = "INSERT INTO " + TABLE_CURRENT + "(" + ID + ", " + TEXT + ", " + DATE + ", " + STATUS + ")" + "VALUES (?,?,?,?)" + ";";
+        String request = "INSERT INTO " + listName + "("  + TEXT + ", " + DATE + ", " + STATUS + ")" + "VALUES (?,?,?)" + ";";
         try (Connection dbConnection = getDbConnection()) {
-            PreparedStatement preparedStatement = dbConnection.prepareStatement(request);
-            preparedStatement.setString(1, String.valueOf(data.getId()));
-            preparedStatement.setString(2, data.getText());
-            preparedStatement.setString(3, data.getDate());
-            preparedStatement.setString(4, data.getStatus());
+            PreparedStatement preparedStatement = dbConnection.prepareStatement(request, new String[] {ID});
+            preparedStatement.setString(1, data.getText());
+            preparedStatement.setString(2, data.getDate());
+            preparedStatement.setString(3, data.getStatus());
             preparedStatement.executeUpdate();
+
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) data.setId(generatedKeys.getLong(ID));
+
         } catch (SQLException e) { Main.storageErrorPrint(); }
     }
 
     @Override
     public void remove (long id) {
-        String request = "DELETE FROM  " + TABLE_CURRENT + " WHERE " + ID + "=" + "'" + id + "'" + ";";
+        String request = "DELETE FROM  " + listName + " WHERE " + ID + "=" + "'" + id + "'" + ";";
         try (Connection dbConnection = getDbConnection()) {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(request);
             preparedStatement.executeUpdate();
@@ -76,10 +92,12 @@ public class DBStorage implements IStorage {
 
     @Override
     public void setStatus (long id, String status) {
-        String request = "UPDATE " + TABLE_CURRENT + " SET " + STATUS + "=" + "'" + status + "'" + " WHERE " + ID + "=" + "'" + id +"'" + ";";
+        String request = "UPDATE " + listName + " SET " + STATUS + "=" + "'" + status + "'" + " WHERE " + ID + "=" + "'" + id +"'" + ";";
         try (Connection dbConnection = getDbConnection()) {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(request);
             preparedStatement.executeUpdate();
         } catch (SQLException e) { Main.storageErrorPrint(); }
     }
 }
+
+

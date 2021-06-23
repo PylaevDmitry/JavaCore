@@ -1,8 +1,11 @@
 package toDoProject;
 
 import toDoProject.Models.Task;
+import toDoProject.Storages.DBStorage;
 import toDoProject.Storages.FileStorage;
 import toDoProject.UserInterfaces.ConsoleUserInterface;
+import toDoProject.UserInterfaces.TelegramBotUserInterface;
+import toDoProject.UserInterfaces.WindowUserInterface;
 
 import java.time.temporal.ValueRange;
 import java.util.*;
@@ -11,20 +14,29 @@ public class Main {
     public static void main (String[] args) {
         Map<String, String> env = System.getenv();
 
-//        var storage = new DBStorage(env.get("dbUserName"), env.get("dbUserPass"));
-        var storage = new FileStorage(env.get("StorageFilePath"));
         var ui = new ConsoleUserInterface();
 //        var ui = new WindowUserInterface();
 //        var ui = new TelegramBotUserInterface(env.get("BotToken"));
+        String userInput = "";
+        while (userInput.length()==0 || Arrays.stream(new String[]{"\\", "|", "/", ":", "?", "\"", "<", ">"}).anyMatch(userInput::contains)) {
+            userInput = ui.askInput("Введите имя пользователя");
+        }
+
+        var storage = new DBStorage(env.get("dbUserName"), env.get("dbUserPass"), userInput);
+//        var storage = new FileStorage("D:\\" + userInput + ".txt");
 
         while (true) {
             Task[] arrTask = storage.getAll();
             Map<Integer, Task> map = new LinkedHashMap<>();
-            for (int i = 0; i < arrTask.length; i++) {
-                map.put(i+1, arrTask[i]);
-                ui.show(i+1 + " " + arrTask[i].toString());
+            var countToShow = 0;
+            for (Task task : arrTask) {
+                if (!task.getStatus().equals("ARCH")) {
+                    map.put(countToShow + 1, task);
+                    ui.show(countToShow + 1 + " " + task.toString());
+                    countToShow += 1;
+                }
             }
-            String userInput;
+
             if (arrTask.length==0) {
                 userInput = ui.askInput("Введите новую заметку, BACK - к списку заметок или EXIT - выйти из программы");
                 if (!userInput.equals("BACK")) storage.add(new Task(userInput, new Date(), "Wait"));
@@ -56,5 +68,5 @@ public class Main {
         } catch (NumberFormatException e) { return -1; }
     }
 
-    public static void storageErrorPrint ( ) { System.out.println("Файл не найден"); }
+    public static void storageErrorPrint ( ) { System.out.println("Ошибка доступа к данным"); }
 }

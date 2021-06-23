@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class FileStorage implements IStorage {
     private final String path;
+    long lastIndex = 0;
 
     public FileStorage (String path) {
         this.path = path;
@@ -26,9 +27,9 @@ public class FileStorage implements IStorage {
         try {
             for (String str:Files.readAllLines(Paths.get(this.path))) {
                 if (str.isEmpty()) continue;
-                Task task = new Task(str);
-                if (!task.getStatus().equals("ARCH")) result.add(new Task(str));
+                result.add(new Task(str));
             }
+            lastIndex = result.size();
         } catch (IOException e) { Main.storageErrorPrint(); }
         if (result.size()==0) return new Task[0];
         else {
@@ -41,7 +42,7 @@ public class FileStorage implements IStorage {
     @Override
     public void add (Task task) {
         try {
-            Files.write(Paths.get(path), (task.getId() + " " + task.toString() + "\n").getBytes(), StandardOpenOption.APPEND);
+            Files.write(Paths.get(path), (lastIndex+1 + " " + task.toString() + "\n").getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) { Main.storageErrorPrint(); }
     }
 

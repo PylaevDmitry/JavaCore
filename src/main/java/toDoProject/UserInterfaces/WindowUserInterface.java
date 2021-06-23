@@ -6,9 +6,9 @@ import java.util.ArrayList;
 
 public class WindowUserInterface implements IUserInterface {
     private boolean showListEnds = false;
-    private ArrayList<String> bufList = new ArrayList<>();
-    private JPanel field = new JPanel();
-    private MainWindow mainWindow = new MainWindow();
+    private final ArrayList<String> bufList = new ArrayList<>();
+    private final JPanel field = new JPanel();
+    private final MainWindow mainWindow = new MainWindow();
     private String userInput;
     private boolean userInputEnds;
 
