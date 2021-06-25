@@ -16,7 +16,7 @@ public class ConsoleUserInterface implements IUserInterface {
         System.out.println(message);
         var userInput = _scanner.next();
         if (userInput.equals("EXIT")) {
-            System.out.println("Спасибо за использование программы");
+            System.out.println("Выход из программы..");
             System.exit(0);
         }
         return userInput;
