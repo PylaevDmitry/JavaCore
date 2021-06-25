@@ -5,52 +5,38 @@ import toDoProject.Storages.FileStorage;
 import toDoProject.UserInterfaces.ConsoleUserInterface;
 import java.time.temporal.ValueRange;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Main {
     public static void main (String[] args) {
         String[] invalidNameSymbols = new String[]{" ", "\\", "|", "/", ":", "?", "\"", "<", ">"};
         String[] commands = new String[] {"ARCH", "DONE", "WAIT", "BACK", "EXIT"};
         String[] tasksStates = new String[] {"ARCH", "DONE", "WAIT"};
-        String userMenuString = "Введите имя или EXIT - выйти из программы";
-        String mainMenuString = "Введите новую заметку, BACK - к списку заметок или EXIT - выйти из программы";
-        String newMenuString = "Выберете номер пункта, создайте новую задачу (NEW) или EXIT - выйти из программы";
-        String editMenuString = "ARCH - убрать, DONE - пометить как выполненное, WAIT - возобновить задачу, BACK - к списку заметок или EXIT - выйти из программы ";
-
         Map<String, String> env = System.getenv();
-        String userInput = "";
+
         var ui = new ConsoleUserInterface();
 //        var ui = new WindowUserInterface();
 //        var ui = new TelegramBotUserInterface(env.get("BotToken"));
-        while (inputCheck(invalidNameSymbols, userInput)>=0) { userInput = ui.askInput(userMenuString); }
+        String userInput = "";
+        while (inputCheck(invalidNameSymbols, userInput)>=0) { userInput = ui.askInput("Введите имя или EXIT - выйти из программы"); }
 //        var storage = new DBStorage(env.get("dbUserName"), env.get("dbUserPass"), userInput);
         var storage = new FileStorage("D:\\" + userInput + ".txt");
 
         while (true) {
-//            Map<Integer, Task> map = new LinkedHashMap<>();
-            AtomicInteger countToShow = new AtomicInteger(1);
-            List<Task> list = Arrays.stream(storage.getAll()).filter(task -> !task.getStatus().equals("ARCH")).collect(Collectors.toList());
-            list.forEach(x -> System.out.println(countToShow.getAndIncrement() + " " + x));
-//            for (Task task : storage.getAll()) {
-//                if (!task.getStatus().equals("ARCH")) {
-//                    map.put(countToShow.get() + 1, task);
-//                    ui.show(countToShow.get() + 1 + " " + task.toString());
-//                    countToShow.addAndGet(1);
-//                }
-//            }
+            List<Task> list = Arrays.stream(storage.getAll()).filter(x -> !x.getStatus().equals("ARCH")).collect(Collectors.toList());
+            IntStream.range(0, list.size()).forEach(i -> System.out.println(i+1 + " " + list.get(i)));
 
             if (list.size()==0 || userInput.equals("NEW")) {
-                userInput = ui.askInput(newMenuString);
+                userInput = ui.askInput("Введите новую заметку, BACK - к списку заметок или EXIT - выйти из программы");
                 if (!userInput.equals("BACK")) storage.add(new Task(userInput, new Date(), "WAIT"));
             }
-
             else {
-                userInput = ui.askInput(mainMenuString);
-                int taskIndex = getIndex(userInput, list);
+                int taskIndex = getIndex(ui.askInput("Выберете номер пункта, создайте новую задачу (NEW) или EXIT - выйти из программы"), list);
                 if (taskIndex != -1) do {
-                    userInput = ui.askInput(editMenuString);
-                    if (inputCheck(tasksStates, userInput)>0) storage.setStatus(list.get(taskIndex).getId(),userInput);
+                    userInput = ui.askInput("ARCH - убрать, DONE - пометить как выполненное, WAIT - возобновить задачу," +
+                            "BACK - к списку заметок или EXIT - выйти из программы ");
+                    if (inputCheck(tasksStates, userInput)>0) storage.setStatus(list.get(taskIndex-1).getId(),userInput);
                 } while (inputCheck(commands, userInput)<=0);
             }
         }
@@ -70,5 +56,4 @@ public class Main {
         if (userInput.length() > 0) return (anyMatch)?1:-1;
         else return 0;
     }
-
 }
