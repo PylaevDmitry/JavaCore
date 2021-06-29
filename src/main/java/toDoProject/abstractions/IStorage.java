@@ -1,6 +1,6 @@
-package toDoProject.Abstractions;
+package toDoProject.abstractions;
 
-import toDoProject.Models.Task;
+import toDoProject.models.Task;
 
 public interface IStorage {
     Task[] getAll ();

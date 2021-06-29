@@ -1,8 +1,9 @@
 package toDoProject;
 
-import toDoProject.Models.Task;
-import toDoProject.Storages.FileStorage;
-import toDoProject.UserInterfaces.ConsoleUserInterface;
+import toDoProject.models.Task;
+import toDoProject.storages.FileStorage;
+import toDoProject.userInterfaces.ConsoleUserInterface;
+import toDoProject.userInterfaces.MobileUserInterface;
 import java.time.temporal.ValueRange;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ public class Main {
         Map<String, String> env = System.getenv();
 
         var ui = new ConsoleUserInterface();
+//        var ui = new MobileUserInterface();
 //        var ui = new WindowUserInterface();
 //        var ui = new TelegramBotUserInterface(env.get("BotToken"));
         String userInput = "";
@@ -32,7 +34,8 @@ public class Main {
                 if (!userInput.equals("BACK")) storage.add(new Task(userInput, new Date(), "WAIT"));
             }
             else {
-                int taskIndex = getIndex(ui.askInput("Выберете номер пункта, создайте новую задачу (NEW) или EXIT - выйти из программы"), list);
+                userInput = ui.askInput("Выберете номер пункта, создайте новую задачу (NEW) или EXIT - выйти из программы");
+                int taskIndex = getIndex(userInput, list);
                 if (taskIndex != -1) do {
                     userInput = ui.askInput("ARCH - убрать, DONE - пометить как выполненное, WAIT - возобновить задачу," +
                             "BACK - к списку заметок или EXIT - выйти из программы ");

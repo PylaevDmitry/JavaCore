@@ -1,8 +1,8 @@
-package toDoProject.Storages;
+package toDoProject.storages;
 
-import toDoProject.Abstractions.IStorage;
+import toDoProject.abstractions.IStorage;
 import toDoProject.Main;
-import toDoProject.Models.Task;
+import toDoProject.models.Task;
 import java.sql.*;
 import java.util.ArrayList;
 

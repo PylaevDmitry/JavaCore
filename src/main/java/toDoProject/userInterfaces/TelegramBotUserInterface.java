@@ -1,6 +1,6 @@
-package toDoProject.UserInterfaces;
+package toDoProject.userInterfaces;
 
-import toDoProject.Abstractions.IUserInterface;
+import toDoProject.abstractions.IUserInterface;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;

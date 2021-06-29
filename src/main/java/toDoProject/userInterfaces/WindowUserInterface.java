@@ -1,6 +1,6 @@
-package toDoProject.UserInterfaces;
+package toDoProject.userInterfaces;
 
-import toDoProject.Abstractions.IUserInterface;
+import toDoProject.abstractions.IUserInterface;
 import javax.swing.*;
 import java.util.ArrayList;
 

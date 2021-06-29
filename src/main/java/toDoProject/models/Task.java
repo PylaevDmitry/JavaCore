@@ -1,4 +1,4 @@
-package toDoProject.Models;
+package toDoProject.models;
 
 import java.util.Date;
 
