@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
+// TODO: Синхронизировать опериции редактирования файла
 public class FileStorage implements IStorage {
     private final String path;
     long lastIndex = 0;

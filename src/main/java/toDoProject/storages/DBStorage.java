@@ -28,6 +28,8 @@ public class DBStorage implements IStorage {
         return DriverManager.getConnection("jdbc:postgresql://localhost:5432/todo", dbUser, dbPass);
     }
 
+    // TODO:  перенсти имя в таблицу колонкой
+    // Почитать про инъекции кода. Выяснить как в джава передавать данные в запрос как параметры
     @Override
     public Task[] getAll ( ) {
         String firstRequest = "CREATE TABLE IF NOT EXISTS " + listName + " (\n" +

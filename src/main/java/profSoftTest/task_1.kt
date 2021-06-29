@@ -1,5 +1,7 @@
 package profSoftTest
 
+import java.io.FileNotFoundException
+import java.io.PrintWriter
 import kotlin.random.Random
 
 fun main() {

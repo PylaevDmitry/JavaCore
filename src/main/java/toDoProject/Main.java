@@ -3,7 +3,6 @@ package toDoProject;
 import toDoProject.models.Task;
 import toDoProject.storages.FileStorage;
 import toDoProject.userInterfaces.ConsoleUserInterface;
-import toDoProject.userInterfaces.MobileUserInterface;
 import java.time.temporal.ValueRange;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,15 +13,16 @@ public class Main {
         String[] invalidNameSymbols = new String[]{" ", "\\", "|", "/", ":", "?", "\"", "<", ">"};
         String[] commands = new String[] {"ARCH", "DONE", "WAIT", "BACK", "EXIT"};
         String[] tasksStates = new String[] {"ARCH", "DONE", "WAIT"};
-        Map<String, String> env = System.getenv();
+        Map<String, String> environmentVars = System.getenv();
 
         var ui = new ConsoleUserInterface();
 //        var ui = new MobileUserInterface();
 //        var ui = new WindowUserInterface();
-//        var ui = new TelegramBotUserInterface(env.get("BotToken"));
+//        var ui = new TelegramBotUserInterface(environmentVars.get("BotToken"));
         String userInput = "";
         while (inputCheck(invalidNameSymbols, userInput)>=0) { userInput = ui.askInput("Введите имя или EXIT - выйти из программы"); }
-//        var storage = new DBStorage(env.get("dbUserName"), env.get("dbUserPass"), userInput);
+//        var storage = new DBStorage(environmentVars.get("dbUserName"), environmentVars.get("dbUserPass"), userInput);
+        // TODO: Вынести путь к папке с файлами в конфиг
         var storage = new FileStorage("D:\\" + userInput + ".txt");
 
         while (true) {
