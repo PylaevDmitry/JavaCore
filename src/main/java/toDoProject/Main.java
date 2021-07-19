@@ -1,7 +1,7 @@
 package toDoProject;
 
 import toDoProject.models.Task;
-import toDoProject.storages.FileStorage;
+import toDoProject.dal.FileTasksDao;
 import toDoProject.userInterfaces.ConsoleUserInterface;
 import java.time.temporal.ValueRange;
 import java.util.*;
@@ -23,7 +23,7 @@ public class Main {
         while (inputCheck(invalidNameSymbols, userInput)>=0) { userInput = ui.askInput("Введите имя или EXIT - выйти из программы"); }
 //        var storage = new DBStorage(environmentVars.get("dbUserName"), environmentVars.get("dbUserPass"), userInput);
         // TODO: Вынести путь к папке с файлами в конфиг
-        var storage = new FileStorage("D:\\" + userInput + ".txt");
+        var storage = new FileTasksDao("D:\\" + userInput + ".txt");
 
         while (true) {
             List<Task> list = Arrays.stream(storage.getAll()).filter(x -> !x.getStatus().equals("ARCH")).collect(Collectors.toList());

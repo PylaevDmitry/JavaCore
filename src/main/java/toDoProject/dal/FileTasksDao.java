@@ -1,4 +1,4 @@
-package toDoProject.storages;
+package toDoProject.dal;
 
 import toDoProject.abstractions.IStorage;
 import toDoProject.Main;
@@ -11,11 +11,11 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 // TODO: Синхронизировать опериции редактирования файла
-public class FileStorage implements IStorage {
+public class FileTasksDao implements IStorage {
     private final String path;
     long lastIndex = 0;
 
-    public FileStorage (String path) {
+    public FileTasksDao (String path) {
         this.path = path;
         try {
             if (!Files.exists(Paths.get(path))) Files.createFile(Paths.get(path));

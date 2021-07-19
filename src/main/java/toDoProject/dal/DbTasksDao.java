@@ -1,4 +1,4 @@
-package toDoProject.storages;
+package toDoProject.dal;
 
 import toDoProject.abstractions.IStorage;
 import toDoProject.Main;
@@ -6,7 +6,7 @@ import toDoProject.models.Task;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class DBStorage implements IStorage {
+public class DbTasksDao implements IStorage {
     private final String dbUser;
     private final String dbPass;
     private final String listName;
@@ -15,7 +15,7 @@ public class DBStorage implements IStorage {
     private static final String DATE  = "date";
     private static final String STATUS  = "status";
 
-    public DBStorage (String dbUser, String dbPass, String listName) {
+    public DbTasksDao (String dbUser, String dbPass, String listName) {
         this.dbUser = dbUser;
         this.dbPass = dbPass;
         this.listName = listName;
