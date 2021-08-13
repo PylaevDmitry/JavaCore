@@ -3,6 +3,9 @@ package toDoProject;
 import toDoProject.models.Task;
 import toDoProject.dal.FileTasksDao;
 import toDoProject.userInterfaces.ConsoleUserInterface;
+import toDoProject.userInterfaces.MobileUserInterface;
+import toDoProject.userInterfaces.TelegramBotUserInterface;
+
 import java.time.temporal.ValueRange;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,10 +18,10 @@ public class Main {
         String[] tasksStates = new String[] {"ARCH", "DONE", "WAIT"};
         Map<String, String> environmentVars = System.getenv();
 
-        var ui = new ConsoleUserInterface();
+//        var ui = new ConsoleUserInterface();
 //        var ui = new MobileUserInterface();
 //        var ui = new WindowUserInterface();
-//        var ui = new TelegramBotUserInterface(environmentVars.get("BotToken"));
+        var ui = new TelegramBotUserInterface(environmentVars.get("BotToken"));
         String userInput = "";
         while (inputCheck(invalidNameSymbols, userInput)>=0) { userInput = ui.askInput("Введите имя или EXIT - выйти из программы"); }
 //        var storage = new DBStorage(environmentVars.get("dbUserName"), environmentVars.get("dbUserPass"), userInput);
