@@ -42,4 +42,6 @@ public class Task {
 
     @Override
     public String toString () { return  text + ' ' + date + ' ' + status; }
+
 }
+
