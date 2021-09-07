@@ -2,6 +2,7 @@ package toDoProject;
 
 import toDoProject.models.Task;
 import toDoProject.dal.FileTasksDao;
+import toDoProject.userInterfaces.ConsoleUserInterface;
 import toDoProject.userInterfaces.TelegramBotUserInterface;
 
 import java.time.temporal.ValueRange;
@@ -17,10 +18,9 @@ public class Main {
         Map<String, String> environmentVars = System.getenv();
         String userInput = "";
 
-//        var ui = new ConsoleUserInterface();
-//        var ui = new MobileUserInterface();
+        var ui = new ConsoleUserInterface();
 //        var ui = new WindowUserInterface();
-        var ui = new TelegramBotUserInterface(environmentVars.get("BotToken"));
+//        var ui = new TelegramBotUserInterface(environmentVars.get("BotToken"));
 
         while (inputCheck(invalidNameSymbols, userInput)>=0) { userInput = ui.askInput("Введите имя или EXIT - выйти из программы"); }
 

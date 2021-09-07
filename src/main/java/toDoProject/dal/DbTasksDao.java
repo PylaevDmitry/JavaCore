@@ -28,8 +28,8 @@ public class DbTasksDao implements IStorage {
         return DriverManager.getConnection("jdbc:postgresql://localhost:5432/todo", dbUser, dbPass);
     }
 
-    // TODO:  перенсти имя в таблицу колонкой
-    // Почитать про инъекции кода. Выяснить как в джава передавать данные в запрос как параметры
+    // TODO:  перенести имя в таблицу колонкой
+    // TODO: Почитать про инъекции кода. Выяснить как в джава передавать данные в запрос как параметры
     @Override
     public Task[] getAll ( ) {
         String firstRequest = "CREATE TABLE IF NOT EXISTS " + listName + " (\n" +
@@ -39,6 +39,7 @@ public class DbTasksDao implements IStorage {
                 STATUS + " VARCHAR(50),\n" +
                 "PRIMARY KEY (" + ID + ")\n" +
                 ");";
+
         try (Connection dbConnection = getDbConnection()) {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(firstRequest);
             preparedStatement.executeUpdate();
@@ -51,10 +52,10 @@ public class DbTasksDao implements IStorage {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 if (!resultSet.getString(STATUS).equals("ARCH")) {
-                    result.add(new Task(resultSet.getString(ID) + " "
-                            + resultSet.getString(TEXT) + " "
-                            + resultSet.getString(DATE) + " "
-                            + resultSet.getString(STATUS)));
+                    result.add(new Task(resultSet.getString(ID),
+                            resultSet.getString(TEXT),
+                            resultSet.getString(DATE),
+                            resultSet.getString(STATUS)));
                 }
             }
         } catch (SQLException e) { Main.storageErrorPrint(); }
@@ -70,6 +71,7 @@ public class DbTasksDao implements IStorage {
     @Override
     public void add (Task data) {
         String request = "INSERT INTO " + listName + "("  + TEXT + ", " + DATE + ", " + STATUS + ")" + "VALUES (?,?,?)" + ";";
+
         try (Connection dbConnection = getDbConnection()) {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(request, new String[] {ID});
             preparedStatement.setString(1, data.getText());
@@ -80,15 +82,6 @@ public class DbTasksDao implements IStorage {
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) data.setId(generatedKeys.getLong(ID));
 
-        } catch (SQLException e) { Main.storageErrorPrint(); }
-    }
-
-    @Override
-    public void remove (long id) {
-        String request = "DELETE FROM  " + listName + " WHERE " + ID + "=" + "'" + id + "'" + ";";
-        try (Connection dbConnection = getDbConnection()) {
-            PreparedStatement preparedStatement = dbConnection.prepareStatement(request);
-            preparedStatement.executeUpdate();
         } catch (SQLException e) { Main.storageErrorPrint(); }
     }
 
