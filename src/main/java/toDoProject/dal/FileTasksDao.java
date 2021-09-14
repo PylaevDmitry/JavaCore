@@ -6,79 +6,68 @@ import toDoProject.models.Task;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 // TODO: Синхронизировать операции редактирования файла
 public class FileTasksDao implements IStorage {
     private final String path;
-    long lastIndex = 0;
+    private String owner;
+    private long lastIndex = 0;
+
+    public void setOwner (String owner) {
+        this.owner = owner;
+    }
 
     public FileTasksDao (String path) {
         this.path = path;
         try {
             if (!Files.exists(Paths.get(path))) Files.createFile(Paths.get(path));
-        } catch (IOException e) { Main.storageErrorPrint(); }
+        } catch (IOException e) {
+            System.out.println(Main.getPropertyContent("storageError"));
+        }
     }
 
-//    @Override
-//    public Task[] getAll () {
-//        var result = new ArrayList<Task>();
-//        try {
-//            for (String str:Files.readAllLines(Paths.get(this.path))) {
-//                if (str.isEmpty()) continue;
-//                result.add(new Task(str));
-//            }
-//            lastIndex = result.size();
-//        } catch (IOException e) { Main.storageErrorPrint(); }
-//        return (result.size()==0)?new Task[0]:result.toArray(Task[]::new);
-//    }
-//
-//    @Override
-//    public void add (Task task) {
-//        try {
-//            Files.write(Paths.get(path), (lastIndex+1 + " " + task.toString() + "\n").getBytes(), StandardOpenOption.APPEND);
-//        } catch (IOException e) { Main.storageErrorPrint(); }
-//    }
-//    @Override
-//    public void setStatus (long id, String status) {
-//        var tasks = getAll();
-//        try (PrintWriter printWriter = new PrintWriter(path)) {
-//            for (var task : tasks) {
-//                if (task.getId() == id) task.setStatus(status);
-//                printWriter.println(task.getId() + " " + task);
-//            }
-//        } catch (IOException e) { Main.storageErrorPrint(); }
-//    }
-
     @Override
-    public Task[] getAll () {
+    public synchronized Task[] getAll () {
         var result = new ArrayList<Task>();
         try (ObjectInputStream objectInputStream = new ObjectInputStream(Files.newInputStream(Paths.get(path)))) {
-            while (true) {result.add((Task) objectInputStream.readObject());}
-        } catch (EOFException e) {lastIndex = result.size();}
-        catch (IOException | ClassNotFoundException e) { Main.storageErrorPrint(); }
+            while (true) {
+                var task = (Task) objectInputStream.readObject();
+                if (task.getOwner().equals(owner)) {
+                    result.add(task);
+                }
+            }
+        } catch (EOFException e) {
+            lastIndex = result.size();
+        }
+        catch (IOException | ClassNotFoundException e) {
+            System.out.println(Main.getPropertyContent("storageError"));
+        }
         return (result.size()==0)?new Task[0]:result.toArray(Task[]::new);
     }
 
     @Override
-    public void add (Task task) {
+    public synchronized void add (Task task) {
         task.setId(lastIndex+1);
         var tasks = getAll();
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(Files.newOutputStream(Paths.get(path)))) {
             for (Task item:tasks) {objectOutputStream.writeObject(item);}
             objectOutputStream.writeObject(task);
-        } catch (IOException e) { Main.storageErrorPrint(); }
+        } catch (IOException e) {
+            System.out.println(Main.getPropertyContent("storageError"));
+        }
     }
 
     @Override
-    public void setStatus (long id, String status) {
+    public synchronized void setStatus (long id, String status) {
         var tasks = getAll();
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(Files.newOutputStream(Paths.get(path)))) {
             for (var task : tasks) {
                 if (task.getId() == id) task.setStatus(status);
                 objectOutputStream.writeObject(task);
             }
-        } catch (IOException e) { Main.storageErrorPrint(); }
+        } catch (IOException e) {
+            System.out.println(Main.getPropertyContent("storageError"));
+        }
     }
 }

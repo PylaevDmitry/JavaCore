@@ -9,16 +9,15 @@ import java.util.ArrayList;
 public class DbTasksDao implements IStorage {
     private final String dbUser;
     private final String dbPass;
-    private final String listName;
-    private static final String ID  = "id";
-    private static final String TEXT  = "text";
-    private static final String DATE  = "date";
-    private static final String STATUS  = "status";
+    private String owner;
 
-    public DbTasksDao (String dbUser, String dbPass, String listName) {
+    public DbTasksDao (String dbUser, String dbPass) {
         this.dbUser = dbUser;
         this.dbPass = dbPass;
-        this.listName = listName;
+    }
+
+    public void setOwner (String owner) {
+        this.owner = owner;
     }
 
     private Connection getDbConnection() throws SQLException {
@@ -32,33 +31,41 @@ public class DbTasksDao implements IStorage {
     // TODO: Почитать про инъекции кода. Выяснить как в джава передавать данные в запрос как параметры
     @Override
     public Task[] getAll ( ) {
-        String firstRequest = "CREATE TABLE IF NOT EXISTS " + listName + " (\n" +
-                ID + " SERIAL,\n" +
-                TEXT + " VARCHAR(50),\n" +
-                DATE + " VARCHAR(50),\n" +
-                STATUS + " VARCHAR(50),\n" +
-                "PRIMARY KEY (" + ID + ")\n" +
-                ");";
+        String firstRequest = """
+                CREATE TABLE IF NOT EXISTS tasks (
+                id SERIAL,
+                owner VARCHAR(50),
+                text VARCHAR(50),
+                date VARCHAR(50),
+                status VARCHAR(50),
+                PRIMARY KEY (id)
+                );""";
 
         try (Connection dbConnection = getDbConnection()) {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(firstRequest);
             preparedStatement.executeUpdate();
-        } catch (SQLException e) { Main.storageErrorPrint(); }
+        } catch (SQLException e) {
+            System.out.println(Main.getPropertyContent("storageError"));
+        }
 
-        String request = "SELECT * FROM " + listName + ";";
+        String request = "SELECT * FROM tasks WHERE owner=?;";
         var result = new ArrayList<Task>();
         try (Connection dbConnection = getDbConnection()) {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(request);
+            preparedStatement.setString(1, owner);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                if (!resultSet.getString(STATUS).equals("ARCH")) {
-                    result.add(new Task(resultSet.getString(ID),
-                            resultSet.getString(TEXT),
-                            resultSet.getString(DATE),
-                            resultSet.getString(STATUS)));
+                if (!resultSet.getString("status").equals("ARCH")) {
+                    result.add(new Task(resultSet.getString("id"),
+                            resultSet.getString("owner"),
+                            resultSet.getString("text"),
+                            resultSet.getString("date"),
+                            resultSet.getString("status")));
                 }
             }
-        } catch (SQLException e) { Main.storageErrorPrint(); }
+        } catch (SQLException e) {
+            System.out.println(Main.getPropertyContent("storageError"));
+        }
 
         if (result.size()==0) return new Task[0];
         else {
@@ -70,28 +77,35 @@ public class DbTasksDao implements IStorage {
 
     @Override
     public void add (Task data) {
-        String request = "INSERT INTO " + listName + "("  + TEXT + ", " + DATE + ", " + STATUS + ")" + "VALUES (?,?,?)" + ";";
+        String request = "INSERT INTO tasks (owner, text, date, status) VALUES (?,?,?,?);";
 
         try (Connection dbConnection = getDbConnection()) {
-            PreparedStatement preparedStatement = dbConnection.prepareStatement(request, new String[] {ID});
-            preparedStatement.setString(1, data.getText());
-            preparedStatement.setString(2, data.getDate());
-            preparedStatement.setString(3, data.getStatus());
+            PreparedStatement preparedStatement = dbConnection.prepareStatement(request, new String[] {});
+            preparedStatement.setString(1, data.getOwner());
+            preparedStatement.setString(2, data.getText());
+            preparedStatement.setString(3, data.getDate());
+            preparedStatement.setString(4, data.getStatus());
             preparedStatement.executeUpdate();
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) data.setId(generatedKeys.getLong(ID));
+            if (generatedKeys.next()) data.setId(generatedKeys.getLong("id"));
 
-        } catch (SQLException e) { Main.storageErrorPrint(); }
+        } catch (SQLException e) {
+            System.out.println(Main.getPropertyContent("storageError"));
+        }
     }
 
     @Override
     public void setStatus (long id, String status) {
-        String request = "UPDATE " + listName + " SET " + STATUS + "=" + "'" + status + "'" + " WHERE " + ID + "=" + "'" + id +"'" + ";";
+        String request = "UPDATE tasks SET status=? WHERE id=?;";
         try (Connection dbConnection = getDbConnection()) {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(request);
+            preparedStatement.setString(1, status);
+            preparedStatement.setLong(2, id);
             preparedStatement.executeUpdate();
-        } catch (SQLException e) { Main.storageErrorPrint(); }
+        } catch (SQLException e) {
+            System.out.println(Main.getPropertyContent("storageError"));
+        }
     }
 }
 

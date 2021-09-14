@@ -6,4 +6,5 @@ public interface IStorage {
     Task[] getAll ();
     void add (Task data);
     void setStatus (long id, String status);
+    void setOwner (String owner);
 }
