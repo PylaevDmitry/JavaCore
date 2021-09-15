@@ -6,24 +6,37 @@ import toDoProject.handlers.ToDoHandler;
 import toDoProject.userInterfaces.ConsoleUserInterface;
 import toDoProject.userInterfaces.TelegramBotUserInterface;
 import toDoProject.userInterfaces.WindowUserInterface;
+import util.CustomProperties;
+
 import java.util.*;
 
-public class Main {
+public class ToDoMain {
+
+    public static Map<String, String> environmentVars;
+    public static CustomProperties properties;
+
     public static void main (String[] args) {
-        Map<String, String> environmentVars = System.getenv();
+
+        environmentVars = System.getenv();
+        properties = new CustomProperties("toDoProject.customConfig");
 
         var ui1 = new ConsoleUserInterface();
         var ui2 = new WindowUserInterface();
         var ui3 = new TelegramBotUserInterface(environmentVars.get("botToken"));
+
         var storage1 = new DbTasksDao(environmentVars.get("dbUserName"), environmentVars.get("dbUserPass"));
         var storage2 = new FileTasksDao(environmentVars.get("filePath"));
 
-        ToDoHandler toDoHandler = new ToDoHandler(ui3, storage2);
-        toDoHandler.manage();
-    }
+        ToDoHandler toDoHandler2 = new ToDoHandler(ui2, storage2);
+        Thread t1 = new Thread(toDoHandler2);
+        t1.start();
 
-    public static String getPropertyContent (String property ) {
-        PropertyResourceBundle properties = (PropertyResourceBundle) PropertyResourceBundle.getBundle("toDoProject.customConfig");
-        return properties.getString(property);
+        ToDoHandler toDoHandler3 = new ToDoHandler(ui3, storage1);
+        Thread t2 = new Thread(toDoHandler3);
+        t2.start();
+
+        ToDoHandler toDoHandler = new ToDoHandler(ui1, storage2);
+        toDoHandler.run();
     }
 }
+
