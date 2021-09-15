@@ -1,7 +1,7 @@
 package toDoProject.dal;
 
 import toDoProject.abstractions.IStorage;
-import toDoProject.Main;
+import toDoProject.ToDoMain;
 import toDoProject.models.Task;
 import java.io.*;
 import java.nio.file.Files;
@@ -23,7 +23,7 @@ public class FileTasksDao implements IStorage {
         try {
             if (!Files.exists(Paths.get(path))) Files.createFile(Paths.get(path));
         } catch (IOException e) {
-            System.out.println(Main.getPropertyContent("storageError"));
+            System.out.println(ToDoMain.properties.getPropertyContent("storageError"));
         }
     }
 
@@ -41,7 +41,7 @@ public class FileTasksDao implements IStorage {
             lastIndex = result.size();
         }
         catch (IOException | ClassNotFoundException e) {
-            System.out.println(Main.getPropertyContent("storageError"));
+            System.out.println(ToDoMain.properties.getPropertyContent("storageError"));
         }
         return (result.size()==0)?new Task[0]:result.toArray(Task[]::new);
     }
@@ -54,7 +54,7 @@ public class FileTasksDao implements IStorage {
             for (Task item:tasks) {objectOutputStream.writeObject(item);}
             objectOutputStream.writeObject(task);
         } catch (IOException e) {
-            System.out.println(Main.getPropertyContent("storageError"));
+            System.out.println(ToDoMain.properties.getPropertyContent("storageError"));
         }
     }
 
@@ -67,7 +67,7 @@ public class FileTasksDao implements IStorage {
                 objectOutputStream.writeObject(task);
             }
         } catch (IOException e) {
-            System.out.println(Main.getPropertyContent("storageError"));
+            System.out.println(ToDoMain.properties.getPropertyContent("storageError"));
         }
     }
 }

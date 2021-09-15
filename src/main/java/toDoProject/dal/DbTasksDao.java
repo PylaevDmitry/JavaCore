@@ -1,7 +1,7 @@
 package toDoProject.dal;
 
 import toDoProject.abstractions.IStorage;
-import toDoProject.Main;
+import toDoProject.ToDoMain;
 import toDoProject.models.Task;
 import java.sql.*;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class DbTasksDao implements IStorage {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(firstRequest);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(Main.getPropertyContent("storageError"));
+            System.out.println(ToDoMain.properties.getPropertyContent("storageError"));
         }
 
         String request = "SELECT * FROM tasks WHERE owner=?;";
@@ -64,7 +64,7 @@ public class DbTasksDao implements IStorage {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(Main.getPropertyContent("storageError"));
+            System.out.println(ToDoMain.properties.getPropertyContent("storageError"));
         }
 
         if (result.size()==0) return new Task[0];
@@ -91,7 +91,7 @@ public class DbTasksDao implements IStorage {
             if (generatedKeys.next()) data.setId(generatedKeys.getLong("id"));
 
         } catch (SQLException e) {
-            System.out.println(Main.getPropertyContent("storageError"));
+            System.out.println(ToDoMain.properties.getPropertyContent("storageError"));
         }
     }
 
@@ -104,7 +104,7 @@ public class DbTasksDao implements IStorage {
             preparedStatement.setLong(2, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(Main.getPropertyContent("storageError"));
+            System.out.println(ToDoMain.properties.getPropertyContent("storageError"));
         }
     }
 }

@@ -1,6 +1,6 @@
 package toDoProject.handlers;
 
-import toDoProject.Main;
+import toDoProject.ToDoMain;
 import toDoProject.abstractions.IStorage;
 import toDoProject.abstractions.IUserInterface;
 import toDoProject.models.Task;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class ToDoHandler {
+public class ToDoHandler implements Runnable {
     private final IStorage storage;
     private final IUserInterface ui;
 
@@ -20,14 +20,16 @@ public class ToDoHandler {
         this.ui = ui;
     }
 
-    public void manage () {
+    public void run () {
         String[] invalidNameSymbols = new String[]{" ", "\\", "|", "/", ":", "?", "\"", "<", ">"};
         String[] commands = new String[] {"ARCH", "DONE", "WAIT", "BACK", "EXIT"};
         String[] tasksStates = new String[] {"ARCH", "DONE", "WAIT"};
         String userInput = "";
         String owner = "";
 
-        while (inputCheck(invalidNameSymbols, owner)>=0) { owner = ui.askInput(Main.getPropertyContent("askOwner")); }
+        while (inputCheck(invalidNameSymbols, owner)>=0) {
+            owner = ui.askInput(ToDoMain.properties.getPropertyContent("askOwner"));
+        }
         storage.setOwner(owner);
 
         while (true) {
@@ -35,14 +37,14 @@ public class ToDoHandler {
             IntStream.range(0, list.size()).forEach(i -> ui.show(i + 1 + " " + list.get(i)));
 
             if (list.size()==0 || userInput.equals("NEW")) {
-                userInput = ui.askInput(Main.getPropertyContent("askNew"));
+                userInput = ui.askInput(ToDoMain.properties.getPropertyContent("askNew"));
                 if (!userInput.equals("BACK")) storage.add(new Task(owner, userInput, new Date(), "WAIT"));
             }
             else {
-                userInput = ui.askInput(Main.getPropertyContent("askNumber"));
+                userInput = ui.askInput(ToDoMain.properties.getPropertyContent("askNumber"));
                 int taskIndex = getIndex(userInput, list);
                 if (taskIndex != -1) do {
-                    userInput = ui.askInput(Main.getPropertyContent("askStatus"));
+                    userInput = ui.askInput(ToDoMain.properties.getPropertyContent("askStatus"));
                     if (inputCheck(tasksStates, userInput)>0) storage.setStatus(list.get(taskIndex-1).getId(),userInput);
                 } while (inputCheck(commands, userInput)<=0);
             }
