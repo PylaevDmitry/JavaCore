@@ -11,6 +11,7 @@ public class WindowUserInterface implements IUserInterface {
     private final MainWindow mainWindow = new MainWindow();
     private String userInput;
     private boolean userInputEnds;
+    private boolean running = true;
 
     private class MainWindow extends JFrame {
         public MainWindow() {
@@ -55,5 +56,9 @@ public class WindowUserInterface implements IUserInterface {
             bufList.clear();
             showListEnds=false;
         }
+    }
+
+    boolean isRunning() {
+        return running;
     }
 }

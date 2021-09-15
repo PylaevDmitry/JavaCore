@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ToDoHandler implements Runnable {
+
     private final IStorage storage;
     private final IUserInterface ui;
 

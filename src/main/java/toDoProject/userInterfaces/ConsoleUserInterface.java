@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class ConsoleUserInterface implements IUserInterface {
 
     private final Scanner _scanner;
+    private boolean running = true;
 
     public ConsoleUserInterface ( ) {
         _scanner = new Scanner((System.in)).useDelimiter("\n");
@@ -25,5 +26,9 @@ public class ConsoleUserInterface implements IUserInterface {
     @Override
     public void show (String message) {
         System.out.println(message);
+    }
+
+    boolean isRunning() {
+        return running;
     }
 }
