@@ -11,12 +11,12 @@ public class WindowUserInterface implements IUserInterface {
     private final MainWindow mainWindow = new MainWindow();
     private String userInput;
     private boolean userInputEnds;
-    private boolean running = true;
+    private volatile boolean running = true;
 
     private class MainWindow extends JFrame {
         public MainWindow() {
             setTitle("TODO");
-            setDefaultCloseOperation((WindowConstants.EXIT_ON_CLOSE));
+            setDefaultCloseOperation((WindowConstants.DO_NOTHING_ON_CLOSE));
             setBounds(300, 300, 900, 400);
             add(field);
             setVisible(true);
@@ -35,11 +35,17 @@ public class WindowUserInterface implements IUserInterface {
         mainWindow.setVisible(true);
         textField.addActionListener(e -> {
             userInput = textField.getText();
-            if (userInput.equals("EXIT")) System.exit(0);
+            if (userInput.equals("EXIT")) {
+                running = false;
+                mainWindow.dispose();
+            }
             userInputEnds = true;
             textField.setText("");
         });
-        while (!userInputEnds) {try { Thread.sleep(250);} catch (InterruptedException ignored) {}}
+        while (!userInputEnds) {
+            try { Thread.sleep(250);
+            } catch (InterruptedException ignored) {}
+        }
         userInputEnds = false;
         return userInput;
     }
@@ -58,7 +64,7 @@ public class WindowUserInterface implements IUserInterface {
         }
     }
 
-    boolean isRunning() {
+    public boolean isRunning() {
         return running;
     }
 }

@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-// TODO: Синхронизировать операции редактирования файла
 public class FileTasksDao implements IStorage {
     private final String path;
     private String owner;
@@ -27,8 +26,9 @@ public class FileTasksDao implements IStorage {
         }
     }
 
+    //TODO:readonly access
     @Override
-    public synchronized Task[] getAll () {
+    public Task[] getAll () {
         var result = new ArrayList<Task>();
         try (ObjectInputStream objectInputStream = new ObjectInputStream(Files.newInputStream(Paths.get(path)))) {
             while (true) {

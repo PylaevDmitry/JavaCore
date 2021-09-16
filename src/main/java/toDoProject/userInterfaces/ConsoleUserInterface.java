@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class ConsoleUserInterface implements IUserInterface {
 
     private final Scanner _scanner;
-    private boolean running = true;
+    private volatile boolean running = true;
 
     public ConsoleUserInterface ( ) {
         _scanner = new Scanner((System.in)).useDelimiter("\n");
@@ -18,7 +18,7 @@ public class ConsoleUserInterface implements IUserInterface {
         var userInput = _scanner.next();
         if (userInput.equals("EXIT")) {
             System.out.println("Выход из программы...");
-            System.exit(0);
+            running = false;
         }
         return userInput;
     }
@@ -28,7 +28,7 @@ public class ConsoleUserInterface implements IUserInterface {
         System.out.println(message);
     }
 
-    boolean isRunning() {
+    public boolean isRunning() {
         return running;
     }
 }

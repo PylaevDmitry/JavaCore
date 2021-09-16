@@ -27,8 +27,6 @@ public class DbTasksDao implements IStorage {
         return DriverManager.getConnection("jdbc:postgresql://localhost:5432/todo", dbUser, dbPass);
     }
 
-    // TODO:  перенести имя в таблицу колонкой
-    // TODO: Почитать про инъекции кода. Выяснить как в джава передавать данные в запрос как параметры
     @Override
     public Task[] getAll ( ) {
         String firstRequest = """

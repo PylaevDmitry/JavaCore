@@ -1,4 +1,4 @@
-package toDoProject.handlers;
+package toDoProject.businessLayer;
 
 import toDoProject.ToDoMain;
 import toDoProject.abstractions.IStorage;
@@ -33,7 +33,7 @@ public class ToDoHandler implements Runnable {
         }
         storage.setOwner(owner);
 
-        while (true) {
+        while (ui.isRunning()) {
             List<Task> list = Arrays.stream(storage.getAll()).filter(task -> !task.getStatus().equals("ARCH")).collect(Collectors.toList());
             IntStream.range(0, list.size()).forEach(i -> ui.show(i + 1 + " " + list.get(i)));
 

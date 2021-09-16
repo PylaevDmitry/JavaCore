@@ -28,4 +28,9 @@ public class TelegramBotUserInterface implements IUserInterface {
 
     @Override
     public void show(String message) { bot.send(message); }
+
+    @Override
+    public boolean isRunning ( ) {
+        return true;
+    }
 }
