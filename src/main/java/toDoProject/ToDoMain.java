@@ -1,6 +1,5 @@
 package toDoProject;
 
-import toDoProject.dal.DbTasksDao;
 import toDoProject.dal.FileTasksDao;
 import toDoProject.businessLayer.ToDoHandler;
 import toDoProject.userInterfaces.ConsoleUserInterface;
@@ -10,26 +9,23 @@ import java.util.*;
 
 public class ToDoMain {
 
-    public static Map<String, String> environmentVars;
-    public static CustomProperties properties;
+    public static final Map<String, String> environmentVars = System.getenv();
+    public static final CustomProperties properties = new CustomProperties("toDoProject.customConfig");
 
     public static void main (String[] args) {
 
-        environmentVars = System.getenv();
-        properties = new CustomProperties("toDoProject.customConfig");
+        var consoleUserInterface = new ConsoleUserInterface();
+        var windowUserInterface = new WindowUserInterface();
+//        var telegramBotUserInterface = new TelegramBotUserInterface(environmentVars.get("botToken"));
 
-        var ui1 = new ConsoleUserInterface();
-        var ui2 = new WindowUserInterface();
-//        var ui3 = new TelegramBotUserInterface(environmentVars.get("botToken"));
+        var fileTasksDao = new FileTasksDao(environmentVars.get("filePath"));
+//        var dbTasksDao = new DbTasksDao(environmentVars.get("dbUserName"), environmentVars.get("dbUserPass"));
 
-        var storage1 = new DbTasksDao(environmentVars.get("dbUserName"), environmentVars.get("dbUserPass"));
-        var storage2 = new FileTasksDao(environmentVars.get("filePath"));
-
-        ToDoHandler toDoHandler2 = new ToDoHandler(ui2, storage2);
-        Thread t1 = new Thread(toDoHandler2);
+        ToDoHandler toDoHandler1 = new ToDoHandler(consoleUserInterface, fileTasksDao);
+        Thread t1 = new Thread(toDoHandler1);
         t1.start();
 
-        ToDoHandler toDoHandler = new ToDoHandler(ui1, storage2);
+        ToDoHandler toDoHandler = new ToDoHandler(windowUserInterface, fileTasksDao);
         toDoHandler.run();
     }
 }
