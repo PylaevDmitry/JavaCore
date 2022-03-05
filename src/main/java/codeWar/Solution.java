@@ -6,7 +6,13 @@ import java.util.LinkedList;
 public class Solution {
     public static void main(String[] args) {
 
-        System.out.println(Arrays.toString(maxSumDig(2000, 3)));
+//        System.out.println(Arrays.toString(maxSumDig(2000, 3)));
+        new Base1().meth1();
+        new Base3().meth1();
+
+        System.out.println((int) 99999999999999999.99999d);
+        System.out.println(Integer.MAX_VALUE);
+
 
     }
 
